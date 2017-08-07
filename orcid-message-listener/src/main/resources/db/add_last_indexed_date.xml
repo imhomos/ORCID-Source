@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    =============================================================================
+
+    ORCID (R) Open Source
+    http://orcid.org
+
+    Copyright (c) 2012-2014 ORCID, Inc.
+    Licensed under an MIT-Style License (MIT)
+    http://orcid.org/open-source-license
+
+    This copyright and license information (including a link to the full license)
+    shall be included in its entirety in all copies or substantial portion of
+    the software.
+
+    =============================================================================
+
+-->
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet id="LAST-INDEXED-DATE" author="Angel Montenegro">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="record_status" columnName="last_indexed_date"/>
+            </not>            
+		</preConditions>
+		<!-- Indicates the number of times it have failed to be sent to S3 -->
+		<sql>ALTER TABLE record_status ADD last_indexed_date TIMESTAMP WITH TIME ZONE;</sql>		
+	</changeSet>
+			
+	<changeSet id="LAST-INDEXED-DATE-INDEX" author="Angel Montenegro">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="last_indexed_date_index" tableName="record_status" />
+			</not>
+		</preConditions>
+		<sql>create index last_indexed_date_index on record_status(last_indexed_date);</sql>
+	</changeSet>
+</databaseChangeLog>

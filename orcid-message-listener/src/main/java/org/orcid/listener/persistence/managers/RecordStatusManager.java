@@ -21,12 +21,16 @@ import java.util.List;
 import org.orcid.listener.persistence.dao.RecordStatusDao;
 import org.orcid.listener.persistence.entities.RecordStatusEntity;
 import org.orcid.listener.persistence.util.AvailableBroker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class RecordStatusManager {
+
+    Logger LOG = LoggerFactory.getLogger(RecordStatusManager.class);
 
     public static final Integer FIRST_FAIL = 1;
 
@@ -52,7 +56,14 @@ public class RecordStatusManager {
             dao.create(orcid, broker, FIRST_FAIL);
         }
     }
-    
+
+    @Transactional
+    public void updateLastIndexedDate(String orcid) {
+        if (!dao.updateLastIndexedDate(orcid)) {
+            LOG.warn("Unable to update the last_indexed_date on record " + orcid);
+        }
+    }
+
     public List<RecordStatusEntity> getFailedElements(int batchSize) {
         return dao.getFailedElements(batchSize);
     }

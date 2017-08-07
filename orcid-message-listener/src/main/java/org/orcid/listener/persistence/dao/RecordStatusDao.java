@@ -79,9 +79,16 @@ public class RecordStatusDao {
         query.setParameter("orcid", orcid);
         return query.executeUpdate() > 0;
     }
-    
+
+    public boolean updateLastIndexedDate(String orcid) {
+        Query query = entityManager.createNativeQuery("UPDATE record_status SET last_indexed_date = now() WHERE orcid = :orcid");
+        query.setParameter("orcid", orcid);
+        return query.executeUpdate() > 0;
+    }
+
     public List<RecordStatusEntity> getFailedElements(int batchSize) {
-        TypedQuery<RecordStatusEntity> query = entityManager.createQuery("FROM RecordStatusEntity WHERE dumpStatus12Api > 0 OR dumpStatus20Api > 0 OR solrStatus20Api > 0 ORDER BY id", RecordStatusEntity.class);
+        TypedQuery<RecordStatusEntity> query = entityManager
+                .createQuery("FROM RecordStatusEntity WHERE dumpStatus12Api > 0 OR dumpStatus20Api > 0 OR solrStatus20Api > 0 ORDER BY id", RecordStatusEntity.class);
         query.setMaxResults(batchSize);
         return query.getResultList();
     }

@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 
 import org.orcid.jaxb.model.error_v2.OrcidError;
 import org.orcid.jaxb.model.message.OrcidMessage;
+import org.orcid.jaxb.model.record.summary_v2.ActivitiesSummary;
 import org.orcid.jaxb.model.record_v2.Record;
 import org.orcid.listener.exception.DeprecatedRecordException;
 import org.orcid.listener.exception.LockedRecordException;
@@ -52,6 +53,9 @@ public class S3MessageProcessor implements Consumer<LastModifiedMessage> {
 
 	@Value("${org.orcid.message-listener.api20Enabled:true}")
 	private boolean is20IndexingEnabled;
+	
+	@Value("${org.orcid.message-listener.api20ActivitiesEnabled:true}")
+	private boolean is20ActivitiesIndexingEnabled;
 
 	@Resource
 	private Orcid12APIClient orcid12ApiClient;
@@ -71,6 +75,7 @@ public class S3MessageProcessor implements Consumer<LastModifiedMessage> {
 		String orcid = m.getOrcid();
 		update_1_2_API(orcid);
 		update_2_0_API(orcid);
+		update_2_0_activities_API(orcid);
 	}
 	
 	public void accept(RetryMessage m) {
@@ -80,6 +85,8 @@ public class S3MessageProcessor implements Consumer<LastModifiedMessage> {
 	        update_1_2_API(orcid);    
 	    } else if(AvailableBroker.DUMP_STATUS_2_0_API.equals(destinationBroker)) {
 	        update_2_0_API(orcid);
+	    } else if(AvailableBroker.DUMP_STATUS_2_0_ACTIVITIES_API.equals(destinationBroker)) {
+	        update_2_0_activities_API(orcid);
 	    }
 	}
 
@@ -123,7 +130,7 @@ public class S3MessageProcessor implements Consumer<LastModifiedMessage> {
 		if (is20IndexingEnabled) {
 			// Update API 2.0
 			try {
-				Record record = orcid20ApiClient.fetchPublicProfile(orcid);
+				Record record = orcid20ApiClient.fetchPublicRecord(orcid);
 				if (record != null) {
 					s3Updater.updateS3(orcid, record);
 					recordStatusManager.markAsSent(orcid, AvailableBroker.DUMP_STATUS_2_0_API);
@@ -154,5 +161,42 @@ public class S3MessageProcessor implements Consumer<LastModifiedMessage> {
 			}
 		}
 	}
+	
+    private void update_2_0_activities_API(String orcid) {
+        if (is20ActivitiesIndexingEnabled) {
+            // Update API 2.0 Activities
+            try {
+                ActivitiesSummary activities = orcid20ApiClient.fetchPublicActivities(orcid);
+                if (activities != null) {
+                    s3Updater.updateS3(orcid, activities);
+                    recordStatusManager.markAsSent(orcid, AvailableBroker.DUMP_STATUS_2_0_ACTIVITIES_API);
+                }
+            } catch (LockedRecordException | DeprecatedRecordException e) {
+                try {
+                    OrcidError error = null;
+                    if (e instanceof LockedRecordException) {
+                        LOG.error("Record " + orcid + " is locked");
+                        error = ((LockedRecordException) e).getOrcidError();
+                    } else {
+                        LOG.error("Record " + orcid + " is deprecated");
+                        error = ((DeprecatedRecordException) e).getOrcidError();
+                    }
+                    exceptionHandler.handle20Exception(orcid, error);
+                    recordStatusManager.markAsSent(orcid, AvailableBroker.DUMP_STATUS_2_0_ACTIVITIES_API);
+                } catch (Exception e1) {
+                    LOG.error("Unable to handle LockedRecordException for record " + orcid, e1);
+                    recordStatusManager.markAsFailed(orcid, AvailableBroker.DUMP_STATUS_2_0_ACTIVITIES_API);
+                }
+            } catch (Exception e) {
+                // something else went wrong fetching the activities from ORCID and
+                // threw a
+                // runtime exception
+                LOG.error("Unable to fetch activities for record " + orcid);
+                LOG.error(e.getMessage(), e);
+                recordStatusManager.markAsFailed(orcid, AvailableBroker.DUMP_STATUS_2_0_ACTIVITIES_API);
+            }
+        }
+
+    }
 
 }

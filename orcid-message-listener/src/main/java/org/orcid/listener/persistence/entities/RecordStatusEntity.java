@@ -26,65 +26,76 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "record_status")
 public class RecordStatusEntity {
-	private Date dateCreated;
-	private Date lastModified;
-	private String orcid;
-	private Integer dumpStatus12Api = 0;
-	private Integer dumpStatus20Api = 0;
-	private Integer solrStatus20Api = 0;
+    private Date dateCreated;
+    private Date lastModified;
+    private String orcid;
+    private Integer dumpStatus12Api = 0;
+    private Integer dumpStatus20Api = 0;
+    private Integer dumpStatus20ActivitiesApi = 0;
+    private Integer solrStatus20Api = 0;
 
-	@Id
-	@Column(name = "orcid", length = 19)
-	public String getId() {
-		return orcid;
-	}
+    @Id
+    @Column(name = "orcid", length = 19)
+    public String getId() {
+        return orcid;
+    }
 
-	public void setId(String orcid) {
-		this.orcid = orcid;
-	}
+    public void setId(String orcid) {
+        this.orcid = orcid;
+    }
 
-	@Column(name = "date_created")
-	public Date getDateCreated() {
-		return dateCreated;
-	}
+    @Column(name = "date_created")
+    public Date getDateCreated() {
+        return dateCreated;
+    }
 
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
 
-	@Column(name = "last_modified")
-	public Date getLastModified() {
-		return lastModified;
-	}
+    @Column(name = "last_modified")
+    public Date getLastModified() {
+        return lastModified;
+    }
 
-	public void setLastModified(Date lastModified) {
-		this.lastModified = lastModified;
-	}
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
+    }
 
-	@Column(name = "api_1_2_dump_status")
-	public Integer getDumpStatus12Api() {
-		return dumpStatus12Api;
-	}
+    @Column(name = "api_1_2_dump_status")
+    public Integer getDumpStatus12Api() {
+        return dumpStatus12Api;
+    }
 
-	public void setDumpStatus12Api(Integer dumpStatus12Api) {
-		this.dumpStatus12Api = dumpStatus12Api;
-	}
+    public void setDumpStatus12Api(Integer dumpStatus12Api) {
+        this.dumpStatus12Api = dumpStatus12Api;
+    }
 
-	@Column(name = "api_2_0_dump_status")
-	public Integer getDumpStatus20Api() {
-		return dumpStatus20Api;
-	}
+    @Column(name = "api_2_0_dump_status")
+    public Integer getDumpStatus20Api() {
+        return dumpStatus20Api;
+    }
 
-	public void setDumpStatus20Api(Integer dumpStatus20Api) {
-		this.dumpStatus20Api = dumpStatus20Api;
-	}
-	
-        @Column(name = "api_2_0_solr_status")
-        public Integer getSolrStatus20Api() {
-            return solrStatus20Api;
-        }
-    
-        public void setSolrStatus20Api(Integer solrStatus20Api) {
-            this.solrStatus20Api = solrStatus20Api;
-        }
+    public void setDumpStatus20Api(Integer dumpStatus20Api) {
+        this.dumpStatus20Api = dumpStatus20Api;
+    }
+
+    @Column(name = "api_2_0_solr_status")
+    public Integer getSolrStatus20Api() {
+        return solrStatus20Api;
+    }
+
+    public void setSolrStatus20Api(Integer solrStatus20Api) {
+        this.solrStatus20Api = solrStatus20Api;
+    }
+
+    @Column(name = "api_2_0_activities_dump_status")
+    public Integer getDumpStatus20ActivitiesApi() {
+        return dumpStatus20ActivitiesApi;
+    }
+
+    public void setDumpStatus20ActivitiesApi(Integer dumpStatus20ActivitiesApi) {
+        this.dumpStatus20ActivitiesApi = dumpStatus20ActivitiesApi;
+    }
+
 }

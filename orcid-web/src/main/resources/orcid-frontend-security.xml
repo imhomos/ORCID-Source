@@ -148,7 +148,10 @@
         <sec:form-login login-processing-url="/signin/auth.json" 
 			login-page="${org.orcid.core.baseUri}/signin" authentication-success-handler-ref="ajaxAuthenticationSuccessHandler"
 			authentication-failure-handler-ref="ajaxAuthenticationFailureHandler"
-			username-parameter="userId" password-parameter="password" />     
+			username-parameter="userId" password-parameter="password" /> 
+		<sec:session-management session-fixation-protection="migrateSession" invalid-session-url="/signin">
+			<sec:concurrency-control expired-url="/signin"/>
+		</sec:session-management>    
 	</sec:http>
 
     <!-- Authenticate the client before reaching the token endpoint -->
@@ -202,7 +205,9 @@
 			login-page="${org.orcid.core.baseUri}/oauth/signin" login-processing-url="/signin/auth"
 			username-parameter="userId" password-parameter="password"
 			default-target-url="${org.orcid.core.baseUri}/my-orcid" />
-		<sec:session-management session-fixation-protection="migrateSession"/>
+		<sec:session-management session-fixation-protection="migrateSession" invalid-session-url="/signin">
+			<sec:concurrency-control expired-url="/signin"/>
+		</sec:session-management>
 	</sec:http>
 	
 	<sec:http pattern="/shibboleth/.*" use-expressions="false" authentication-manager-ref="authenticationManager" 
@@ -220,7 +225,9 @@
 			authentication-failure-handler-ref="ajaxAuthenticationFailureHandlerShibboleth"
 			username-parameter="userId" password-parameter="password" 
 			default-target-url="/shibboleth/signin" />
-		<sec:session-management session-fixation-protection="migrateSession"/>
+		<sec:session-management session-fixation-protection="migrateSession" invalid-session-url="/signin">
+			<sec:concurrency-control expired-url="/signin"/>
+		</sec:session-management>
 	</sec:http>
 	
 	<bean id="ajaxAuthenticationSuccessHandlerSocial"
@@ -241,7 +248,9 @@
 			authentication-failure-handler-ref="ajaxAuthenticationFailureHandlerSocial"
 			username-parameter="userId" password-parameter="password" 
 			default-target-url="/social/access" />
-		<sec:session-management session-fixation-protection="migrateSession"/>
+		<sec:session-management session-fixation-protection="migrateSession" invalid-session-url="/signin">
+			<sec:concurrency-control expired-url="/signin"/>
+		</sec:session-management>
 	</sec:http> 
 	
 	<sec:http use-expressions="false" access-decision-manager-ref="accessDecisionManager" authentication-manager-ref="authenticationManager" create-session="ifRequired"
@@ -399,7 +408,9 @@
 			login-page="${org.orcid.core.baseUri}/signin" authentication-success-handler-ref="ajaxAuthenticationSuccessHandler"
 			authentication-failure-handler-ref="ajaxAuthenticationFailureHandler"
 			username-parameter="userId" password-parameter="password" />
-		<sec:session-management session-fixation-protection="migrateSession"/>
+		<sec:session-management session-fixation-protection="migrateSession" invalid-session-url="/signin">
+			<sec:concurrency-control expired-url="/signin"/>
+		</sec:session-management>
 	</sec:http>
 
 	<oauth2:web-expression-handler id="oauthWebExpressionHandler" />

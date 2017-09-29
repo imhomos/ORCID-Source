@@ -186,6 +186,9 @@ public class OrcidProfileManagerImplTest extends OrcidProfileManagerBaseTest {
     @Resource
     private Jaxb2JpaAdapter jaxb2JpaAdapter;
 
+    @Resource
+    private OrcidJaxbCopyManager orcidJaxbCopyManager;
+    
     @Mock
     private SourceManager mockSourceManager;
     
@@ -252,7 +255,9 @@ public class OrcidProfileManagerImplTest extends OrcidProfileManagerBaseTest {
         orcidProfileManager.setCompareWorksUsingScopusWay(true);
     
         MockitoAnnotations.initMocks(this);
-        TargetProxyHelper.injectIntoProxy(jaxb2JpaAdapter, "sourceManager", mockSourceManager);
+        TargetProxyHelper.injectIntoProxy(jaxb2JpaAdapter, "sourceManager", mockSourceManager);        
+        TargetProxyHelper.injectIntoProxy(orcidJaxbCopyManager, "sourceManager", mockSourceManager);
+        TargetProxyHelper.injectIntoProxy(orcidProfileManager, "sourceManager", mockSourceManager);
         SourceEntity sourceEntity = new SourceEntity();
         sourceEntity.setSourceClient(clientDetails);
         when(mockSourceManager.retrieveSourceEntity()).thenReturn(sourceEntity);    
@@ -682,12 +687,12 @@ public class OrcidProfileManagerImplTest extends OrcidProfileManagerBaseTest {
     public void testUpdateProfileWithDupeWork() {
         OrcidProfile profile = createBasicProfile();
         OrcidProfile createdProfile = orcidProfileManager.createOrcidProfile(profile, false, false);
-        List<OrcidWork> orcidWorkList = createdProfile.getOrcidActivities().getOrcidWorks().getOrcidWork();
-        assertEquals(1, orcidWorkList.size());
+        assertEquals(1, createdProfile.getOrcidActivities().getOrcidWorks().getOrcidWork().size());
 
-        orcidWorkList.add(createWork1());
-        assertEquals(2, orcidWorkList.size());
-        OrcidProfile updatedProfile = orcidProfileManager.updateOrcidProfile(createdProfile);
+        List<OrcidWork> worksToPut = new ArrayList<OrcidWork>();
+        worksToPut.add(createWork1());
+        createdProfile.setOrcidWork(worksToPut);
+        OrcidProfile updatedProfile = orcidProfileManager.updateOrcidWorks(createdProfile);
         List<OrcidWork> updatedOrcidWorkList = updatedProfile.getOrcidActivities().getOrcidWorks().getOrcidWork();
         assertEquals(1, updatedOrcidWorkList.size());
     }

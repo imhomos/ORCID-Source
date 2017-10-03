@@ -253,6 +253,7 @@ public class OrcidProfileManagerImplTest extends OrcidProfileManagerBaseTest {
     
         MockitoAnnotations.initMocks(this);
         TargetProxyHelper.injectIntoProxy(jaxb2JpaAdapter, "sourceManager", mockSourceManager);
+        TargetProxyHelper.injectIntoProxy(orcidProfileManager, "sourceManager", mockSourceManager);
         SourceEntity sourceEntity = new SourceEntity();
         sourceEntity.setSourceClient(clientDetails);
         when(mockSourceManager.retrieveSourceEntity()).thenReturn(sourceEntity);    
@@ -687,7 +688,7 @@ public class OrcidProfileManagerImplTest extends OrcidProfileManagerBaseTest {
 
         orcidWorkList.add(createWork1());
         assertEquals(2, orcidWorkList.size());
-        OrcidProfile updatedProfile = orcidProfileManager.updateOrcidProfile(createdProfile);
+        OrcidProfile updatedProfile = orcidProfileManager.updateOrcidWorks(createdProfile);
         List<OrcidWork> updatedOrcidWorkList = updatedProfile.getOrcidActivities().getOrcidWorks().getOrcidWork();
         assertEquals(1, updatedOrcidWorkList.size());
     }

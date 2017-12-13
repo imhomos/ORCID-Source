@@ -17,9 +17,9 @@
 
 -->
 <root-cmp></root-cmp>
-<script type="text/javascript" src="${staticCdn}/javascript/jquery/2.2.3/jquery.min.js"></script>
-<script type="text/javascript" src="${staticCdn}/javascript/jqueryui/1.10.0/jquery-ui.min.js"></script>
-<script type="text/javascript" src="${staticCdn}/javascript/jquery-migrate/1.3.0/jquery-migrate-1.3.0.min.js"></script>
+<script type="text/javascript" src="<@spring.url '/static/javascript/jquery/2.2.3/jquery.min.js' />"></script>
+<script type="text/javascript" src="<@spring.url '/static/javascript/jqueryui/1.10.0/jquery-ui.min.js' />"></script>
+<script type="text/javascript" src="<@spring.url '/static/javascript/jquery-migrate/1.3.0/jquery-migrate-1.3.0.min.js' />"></script>
 
 <script type="text/javascript" >
     // CSRF
@@ -39,15 +39,15 @@
 </script>
 
 
-<script type="text/javascript" src="${staticCdn}/javascript/typeahead/0.9.3/typeahead.min.js"></script>
+<script type="text/javascript" src="<@spring.url '/static/javascript/typeahead/0.9.3/typeahead.min.js' />"></script>
 
-<script type="text/javascript" src="${staticCdn}/javascript/plugins.js?v=${ver}"></script>
+<script type="text/javascript" src="<@spring.url '/static/javascript/plugins.js' />"></script>
 
-<script type="text/javascript" src="${staticCdn}/javascript/orcid.js?v=${ver}"></script>
+<script type="text/javascript" src="<@spring.url '/static/javascript/orcid.js' />"></script>
 
-<script type="text/javascript" src="${staticCdn}/javascript/script.js?v=${ver}"></script>
+<script type="text/javascript" src="<@spring.url '/static/javascript/script.js' />"></script>
 
-<script src="${staticCdn}/javascript/angular_orcid_generated.js?v=${ver}"></script>
+<script src="<@spring.url '/static/javascript/angular_orcid_generated.js' />"></script>
 
 <script type="text/javascript">
     var lang = OrcidCookie.getCookie('locale_v3');

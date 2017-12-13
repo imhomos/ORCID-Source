@@ -40,7 +40,17 @@
 
     <import resource="classpath*:orcid-frontend-security.xml"/>
     <import resource="classpath*:orcid-solr-config.xml"/>
-    <mvc:resources location="/static/" mapping="/static/**" cache-period="1206297260"/>
+    <mvc:resources location="/static/" mapping="/static/**" cache-period="1000">
+        <mvc:resource-chain resource-cache="true" >
+            <mvc:resolvers>
+                <mvc:version-resolver>
+                    <mvc:content-version-strategy
+                        patterns="/**" />
+                </mvc:version-resolver>
+            </mvc:resolvers>
+        </mvc:resource-chain>
+     </mvc:resources>
+
 
     <context:component-scan base-package="org.orcid"/>
     <mvc:annotation-driven ignore-default-model-on-redirect="true" />
@@ -110,5 +120,4 @@
     <bean id="worksPaginator" class="org.orcid.frontend.web.pagination.WorksPaginator" >
         <property name="worksCacheManager" ref="worksCacheManager" />
     </bean>
-
 </beans>

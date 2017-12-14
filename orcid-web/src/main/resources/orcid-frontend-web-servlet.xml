@@ -62,11 +62,18 @@
         <ref bean="localeChangeInterceptor" />
     </mvc:interceptors>
 
+	<bean id="assetDirective" class="org.orcid.frontend.web.freemarker.AssetDirective" />
+
     <!-- freemarker config -->
     <bean id="freemarkerConfig"
           class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="classpath:/freemarker/"/>
         <property name="defaultEncoding" value="UTF-8"/>
+        <property name="freemarkerVariables">
+        	<map>
+        		<entry key="asset" value-ref="assetDirective" />
+        	</map>
+        </property> 
         <property name="freemarkerSettings">
             <props>
             	<prop key="default_encoding">UTF-8</prop>
